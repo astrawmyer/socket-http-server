@@ -19,7 +19,7 @@ def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
         '''
     """
 
-    # TODO: Implement response_ok
+    
     return b"\r\n".join([
         b"HTTP/1.1 200 OK",
         b"Content-Type: " + mimetype,
@@ -30,7 +30,6 @@ def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
 def response_method_not_allowed():
     """Returns a 405 Method Not Allowed response"""
 
-    # TODO: Implement response_method_not_allowed
     return b"\r\n".join([
         b"HTTP/1.1 405 Method Not Allowed",
         b"",
@@ -41,8 +40,11 @@ def response_method_not_allowed():
 def response_not_found():
     """Returns a 404 Not Found response"""
 
-    # TODO: Implement response_not_found
-    return b""
+    return b"\r\n".join([
+        b"HTTP/1.1 404 Not Found",
+        b"",
+        b"404'd."
+    ])
 
 
 def parse_request(request):
@@ -53,8 +55,8 @@ def parse_request(request):
     NotImplementedError if the method of the request is not GET.
     """
 
-    # TODO: implement parse_request
-    method, path version = request.split("\r\n")[0].split(" ")
+    
+    method, path, version = request.split("\r\n")[0].split(" ")
 
     if method != "GET":
         raise NotImplementedError
@@ -134,7 +136,7 @@ def server(log_buffer=sys.stderr):
 
                 # TODO: Use parse_request to retrieve the path from the request.
                 try:
-                    path = pars_request(request)
+                    path = parse_request(request)
 
                     # TODO: Use response_path to retrieve the content and the mimetype,
                     # based on the request path.
