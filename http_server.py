@@ -1,6 +1,7 @@
 import socket
 import sys
 import traceback
+import mimetypes
 
 def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
     """
