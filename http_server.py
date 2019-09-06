@@ -2,6 +2,7 @@ import socket
 import sys
 import traceback
 import mimetypes
+import os
 
 def response_ok(body=b"This is a minimal response", mimetype=b"text/plain"):
     """
@@ -106,7 +107,21 @@ def response_path(path):
     content = b"not implemented"
     mime_type = b"not implemented"
 
-    return content, mime_type
+    # Get directory
+    directory = os.path.abspath('webroot')
+
+    # if path is a directory
+    if os.path.isdir(directory + path):
+        mime_type = mimetypes.guess_type(path)[0].encode('utf-8')
+        content = os.listdir(directory + path).encode('utf-8')
+        return content, mime_type
+
+    elif  os.path.isfile(directory + path):
+        mime_type = mimetypes.guess_type(path)[0].encode('utf-8')
+        with open(directory + path, 'rb') as f:
+            content = f.read()
+        return content, mime_type
+
 
 
 def server(log_buffer=sys.stderr):
