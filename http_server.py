@@ -112,15 +112,16 @@ def response_path(path):
 
     # if path is a directory
     if os.path.isdir(directory + path):
-        mime_type = mimetypes.guess_type(path)[0].encode('utf-8')
-        content = os.listdir(directory + path).encode('utf-8')
+        mime_type = mimetypes.guess_type(path)[0]
+        content = os.listdir(directory + path)
         return content, mime_type
 
     elif  os.path.isfile(directory + path):
-        mime_type = mimetypes.guess_type(path)[0].encode('utf-8')
+        mime_type = mimetypes.guess_type(path)[0]
         with open(directory + path, 'rb') as f:
             content = f.read()
         return content, mime_type
+    raise NameError
 
 
 
@@ -156,18 +157,21 @@ def server(log_buffer=sys.stderr):
 
                     # TODO: Use response_path to retrieve the content and the mimetype,
                     # based on the request path.
-
+                    content, mimetype = response_path(path)
                     # TODO; If parse_request raised a NotImplementedError, then let
                     # response be a method_not_allowed response. If response_path raised
                     # a NameError, then let response be a not_found response. Else,
                     # use the content and mimetype from response_path to build a 
                     # response_ok.
                     response = response_ok(
-                        body=b"Welcome to my web server",
-                        mimetype=b"text/plain"
+                        body=content,
+                        mimetype=mimetype
                     )
                 except NotImplementedError:
                     response = response_method_not_allowed()
+                
+                except NameError:
+                    response = response_not_found()
 
                 conn.sendall(response)
             except:
